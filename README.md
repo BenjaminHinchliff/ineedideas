@@ -23,7 +23,7 @@ snyes
 
 requires cmake and a working c compiler
 
-```shell
+```console
 git clone https://github.com/BenjaminHinchliff/ineedideas.git
 cd ineedideas
 mkdir build
