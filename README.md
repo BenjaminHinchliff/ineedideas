@@ -18,3 +18,16 @@ Seana
 beau-ideal mycologists motograph superimply 
 snyes
 ```
+
+## Quickstart
+
+requires cmake and a working c compiler
+
+```shell
+git clone https://github.com/BenjaminHinchliff/ineedideas.git
+cd ineedideas
+mkdir build
+cd build
+cmake ..
+cmake --build .
+```
