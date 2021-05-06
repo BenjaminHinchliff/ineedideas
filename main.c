@@ -7,95 +7,11 @@
 #include <time.h>
 #include <unistd.h>
 
-#define WORDS_INITIAL_SIZE 32
+#include "words.h"
 
-typedef struct Words {
-  char **words;
-  size_t length;
-  size_t reserved_length;
-} Words;
-
-Words *new_words() {
-  Words *words = malloc(sizeof(*words));
-  if (words == NULL) {
-    return NULL;
-  }
-  words->words = malloc(sizeof(*words->words) * WORDS_INITIAL_SIZE);
-  if (words->words == NULL) {
-    return NULL;
-  }
-  words->length = 0;
-  words->reserved_length = WORDS_INITIAL_SIZE;
-  return words;
-}
-
-bool add_word(Words *const words, const char *const word) {
-  assert(words->length <= words->reserved_length &&
-         "number of words in buffer must be less than the buffer size");
-  // buffer expand logic
-  if (words->length == words->reserved_length) {
-    // double buffer length on realloc
-    size_t next_reserved_length = words->reserved_length * 2;
-    char **next_words =
-        realloc(words->words, sizeof(*words->words) * next_reserved_length);
-    // don't insert if out of memory
-    if (next_words == NULL) {
-      return false;
-    }
-    words->reserved_length = next_reserved_length;
-    words->words = next_words;
-  }
-  // allows for passing of stack objects
-  char *owned_word = malloc(sizeof(*word) * (strlen(word) + 1));
-  if (owned_word == NULL) {
-    return false;
-  }
-  strcpy(owned_word, word);
-  words->words[words->length] = owned_word;
-  words->length += 1;
-  return true;
-}
-
-char *random_word(const Words *const words) {
+const char *random_word(const char ** words, size_t num_words) {
   // NOTE: better randomness could be done but I don't think I need to
-  return words->words[rand() % words->length];
-}
-
-void free_words(Words **words_ptr) {
-  Words *words = *words_ptr;
-  for (size_t i = 0; i < words->length; i += 1) {
-    free(words->words[i]);
-  }
-  free(words->words);
-  free(words);
-  *words_ptr = NULL;
-}
-
-#define LINE_BUF_SZ 255
-
-Words *load_words(const char *const filename) {
-  assert(filename != NULL && "filename cannot be NULL");
-  FILE *const file = fopen(filename, "r");
-  if (file == NULL) {
-    return NULL;
-  }
-
-  Words *words = new_words();
-  if (words == NULL) {
-    return NULL;
-  }
-
-  char line[LINE_BUF_SZ];
-  while (fgets(line, LINE_BUF_SZ, file) != NULL) {
-    // remove trailing newline
-    line[strcspn(line, "\n")] = '\0';
-    if (!add_word(words, line)) {
-      return NULL;
-    }
-  }
-  fclose(file);
-
-  return words;
+  return words[rand() % num_words];
 }
 
 typedef struct Options {
@@ -184,23 +100,16 @@ int main(int argc, char **argv) {
           "Generating %d with lower at least %d words and at most %d words\n",
           options.count, options.lower, options.upper);
 
-  Words *words = load_words("words.txt");
-  if (words == NULL) {
-    fprintf(stderr, "failed to load words\n");
-    return 1;
-  }
-
   // set seed to current time
   srand(time(NULL));
 
   for (int i = 0; i < options.count; i += 1) {
     size_t num_words = rand() % (options.upper - options.lower) + options.lower;
     for (size_t i = 0; i < num_words; i += 1) {
-      printf("%s ", random_word(words));
+      printf("%s ", random_word(WORDS, NUM_WORDS));
     }
     printf("\n");
   }
 
-  free_words(&words);
   return 0;
 }
