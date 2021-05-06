@@ -65,7 +65,7 @@ const char *USAGE =
     "1)\n"
     "  -u, --upper <NUM>\t\tThe upper bound on the number of words (default: "
     "5)\n"
-    "  -c, --count <NUM>\t\tThe number of \"ideas\" to generate (default: 1)\n";
+    "  -c, --count <NUM>\t\tThe number of \"ideas\" to generate (default: 1)";
 
 // utility macro to prevent repeated code for positive checks (bad?)
 #define EXPECT_POSITIVE(var)                                                   \
@@ -82,7 +82,7 @@ int main(int argc, char **argv) {
   }
 
   if (options.help) {
-    printf(USAGE);
+    printf("%s\n", USAGE);
     return 0;
   }
 

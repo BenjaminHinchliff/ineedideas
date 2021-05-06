@@ -12,7 +12,7 @@ CTestTestfile.cmake
 _deps
 
 # Build Directories
-build/
+build*/
 out/
 
 # VSCode Config Files
