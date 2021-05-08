@@ -5,6 +5,6 @@
 
 extern const char *WORDS[];
 
-extern const size_t NUM_WORDS;
+extern const size_t WORDS_LEN;
 
-#endif // !WORDS_H
+#endif /* !WORDS_H */

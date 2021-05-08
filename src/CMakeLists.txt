@@ -7,7 +7,7 @@ set(SRCS
 
 add_executable(ineedideas ${SRCS} ${HDRS})
 
-set_property(TARGET ineedideas PROPERTY C_STANDARD 99)
+set_property(TARGET ineedideas PROPERTY C_STANDARD 90)
 set_property(TARGET ineedideas PROPERTY C_STANDARD_REQUIRED ON)
 set_property(TARGET ineedideas PROPERTY C_EXTENSIONS OFF)
 

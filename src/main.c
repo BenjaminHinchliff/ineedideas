@@ -1,5 +1,5 @@
 #include <assert.h>
-#include <getopt.h> // getopt_long
+#include <getopt.h> /* getopt_long */
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -9,8 +9,8 @@
 
 #include "words.h"
 
-const char *random_word(const char ** words, size_t num_words) {
-  // NOTE: better randomness could be done but I don't think I need to
+const char *random_word(const char **words, size_t num_words) {
+  /* NOTE: better randomness could be done but I don't think I need to */
   return words[rand() % num_words];
 }
 
@@ -21,12 +21,11 @@ typedef struct Options {
   int count;
 } Options;
 
-const struct option LONG_OPTIONS[] = {
-    {.name = "help",  .has_arg = no_argument, .flag = NULL, .val = 'h'},
-    {.name = "count", .has_arg = required_argument, .flag = NULL, .val = 'c'},
-    {.name = "lower", .has_arg = required_argument, .flag = NULL, .val = 'l'},
-    {.name = "upper", .has_arg = required_argument, .flag = NULL, .val = 'u'},
-    {0, 0, 0, 0}};
+const struct option LONG_OPTIONS[] = {{"help", no_argument, NULL, 'h'},
+                                      {"count", required_argument, NULL, 'c'},
+                                      {"lower", required_argument, NULL, 'l'},
+                                      {"upper", required_argument, NULL, 'u'},
+                                      {0, 0, 0, 0}};
 
 bool get_options(int argc, char **argv, Options *options) {
   *options = (Options){
@@ -42,7 +41,7 @@ bool get_options(int argc, char **argv, Options *options) {
       options->help = true;
       break;
     case 'l':
-      options->lower = atoi(optarg); // lazy
+      options->lower = atoi(optarg); /* lazy */
       break;
     case 'u':
       options->upper = atoi(optarg);
@@ -67,7 +66,7 @@ const char *USAGE =
     "5)\n"
     "  -c, --count <NUM>\t\tThe number of \"ideas\" to generate (default: 1)";
 
-// utility macro to prevent repeated code for positive checks (bad?)
+/* utility macro to prevent repeated code for positive checks (bad?) */
 #define EXPECT_POSITIVE(var)                                                   \
   if (var < 0) {                                                               \
     fprintf(stderr, "%s must be greater than or equal to 0\n", #var);          \
@@ -95,18 +94,21 @@ int main(int argc, char **argv) {
     return 1;
   }
 
-  // stderr to allow redirection
+  /* stderr to allow redirection */
   fprintf(stderr,
           "Generating %d with lower at least %d words and at most %d words\n",
           options.count, options.lower, options.upper);
 
-  // set seed to current time
+  /* set seed to current time */
   srand(time(NULL));
 
-  for (int i = 0; i < options.count; i += 1) {
-    size_t num_words = rand() % (options.upper - options.lower) + options.lower;
-    for (size_t i = 0; i < num_words; i += 1) {
-      printf("%s ", random_word(WORDS, NUM_WORDS));
+  int i;
+  size_t num_words;
+  size_t j;
+  for (i = 0; i < options.count; i += 1) {
+    num_words = rand() % (options.upper - options.lower) + options.lower;
+    for (j = 0; j < num_words; j += 1) {
+      printf("%s ", random_word(WORDS, WORDS_LEN));
     }
     printf("\n");
   }
